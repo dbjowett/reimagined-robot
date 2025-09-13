@@ -1,3 +1,5 @@
+const PROVER_URL = import.meta.env.VITE_PROVER_URL;
+
 export const fetchProof = async (
   jwt: string,
   extendedEphemeralPublicKey: string,
@@ -6,7 +8,7 @@ export const fetchProof = async (
   salt: string,
   keyClaimName: string
 ) => {
-  const res = await fetch('https://prover-dev.mystenlabs.com/v1', {
+  const res = await fetch(PROVER_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

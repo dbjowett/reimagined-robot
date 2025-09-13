@@ -34,7 +34,8 @@ Features:
 
 ```
 src/
-├── components/          # React components
+├── api/                # Api Requests
+├── components/         # React components
 ├── hooks/              # Custom React hooks
 ├── providers/          # Context providers
 ├── types/              # TypeScript type definitions
@@ -56,10 +57,16 @@ cd t3
 pnpm install
 ```
 
-3. Copy example .env and update Google Client ID
+3. Copy example .env
 
 ```bash
 cp .env.sample .env
+```
+
+4. Update Google Client URL inside `/.env` file
+
+```bash
+VITE_GOOGLE_CLIENT_ID=<CLIENT_ID>
 ```
 
 4.  Start server:

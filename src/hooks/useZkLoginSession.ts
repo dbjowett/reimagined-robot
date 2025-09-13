@@ -4,8 +4,7 @@ import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { generateNonce as generateNonceZkLogin, generateRandomness } from '@mysten/sui/zklogin';
 import { useEffect, useState } from 'react';
 
-// TODO: Update to mainnet(?)
-const FULLNODE_URL = 'https://fullnode.devnet.sui.io';
+const FULLNODE_URL = import.meta.env.VITE_SUI_DEVNET_URL;
 const LOGIN_SESSION_KEY = 'zkLoginSession';
 
 type PersistedSession = {
