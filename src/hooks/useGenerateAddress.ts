@@ -13,5 +13,5 @@ export const useGenerateAddress = (jwt: string | null, salt: bigint | null) => {
     fetchAddress();
   }, [jwt, salt]);
 
-  return address;
+  return { address };
 };
