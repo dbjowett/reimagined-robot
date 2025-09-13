@@ -6,7 +6,7 @@ export const Card = ({ children }: { children: React.ReactNode }) => {
   const Icon = isLoggedIn ? ShieldCheck : Shield;
   return (
     <div className="card-body items-center text-center">
-      <h2 className="card-title mb-4">
+      <h2 className="card-title mb-4 overflow-hidden">
         <Icon />
         Secure Your Web3
       </h2>
