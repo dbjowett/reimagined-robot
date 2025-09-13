@@ -11,7 +11,16 @@ export const useGenerateProof = (salt: bigint | null, zkLoginSession: ZkLoginSes
 
   useEffect(() => {
     const getProof = async () => {
-      if (!isLoggedIn || !jwt || !salt || !zkLoginSession || zkProof || proofLoading) return;
+      if (
+        !isLoggedIn ||
+        !jwt ||
+        !salt ||
+        !zkLoginSession ||
+        !zkLoginSession.extEpPublicKey ||
+        zkProof ||
+        proofLoading
+      )
+        return;
       setProofLoading(true);
       try {
         const proof = await fetchProof(
