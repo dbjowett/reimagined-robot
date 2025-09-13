@@ -5,13 +5,13 @@ export const useGenerateAddress = (jwt: string | null, salt: bigint | null) => {
   const [address, setAddress] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!jwt || !salt) return;
+    if (!jwt || !salt || address) return;
     const fetchAddress = () => {
       const address = jwtToAddress(jwt, salt);
       setAddress(address);
     };
     fetchAddress();
-  }, [jwt, salt]);
+  }, [jwt, salt, address]);
 
   return { address };
 };

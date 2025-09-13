@@ -15,6 +15,7 @@ export const useSalt = () => {
   const [salt, setSalt] = useState<bigint | null>(null);
 
   useEffect(() => {
+    if (salt) return;
     const storedSalt = localStorage.getItem('salt');
     if (storedSalt) {
       setSalt(BigInt(storedSalt));
