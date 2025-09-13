@@ -16,11 +16,11 @@ A minimal, clean-designed web wallet using zkLogin auth with Google oAuth, built
 
 Features:
 
-- 🔐 **Google OAuth Authentication** - Secure login using existing Google credentials
-- 💰 **Balance Viewing** - Display user's Sui token balances
-- ✅ **Transaction Approval** - Approve and sign transactions
-- 🎨 **Modern UI** - Clean, responsive interface built with React and Tailwind CSS
-- 🌐 **Sui Testnet Integration** - Deployed and tested on Sui testnet
+- **Google OAuth Authentication** - Secure login using existing Google credentials
+- **Balance Viewing** - Display user's Sui token balances
+- **Transaction Approval** - Approve and sign transactions
+- **Modern UI** - Clean, responsive interface built with React and Tailwind CSS
+- **Sui Testnet Integration** - Deployed and tested on Sui testnet
 
 ## Tech
 
@@ -56,7 +56,13 @@ cd t3
 pnpm install
 ```
 
-3. Start server:
+3. Copy example .env and update Google Client ID
+
+```bash
+cp .env.sample .env
+```
+
+4.  Start server:
 
 ```bash
 pnpm dev
