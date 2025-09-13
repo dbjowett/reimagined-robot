@@ -1,5 +1,6 @@
 import { Shield, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
+import { Navbar } from './components/Navbar';
 import { useFetchNonce } from './hooks/useFetchNonce';
 import { useHandleCallback } from './hooks/useHandleCallback';
 import { useAuth } from './providers/AuthProvider';
@@ -39,6 +40,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen w-screen">
+      <Navbar />
       <div className="flex flex-1 items-center justify-center">
         <div className="card w-96 bg-base-100 shadow-xl p-6">
           {!isLoggedIn ? (
