@@ -9,10 +9,13 @@ export const useHandleCallback = () => {
       const query = new URLSearchParams(window.location.hash.substring(1));
 
       const token = query.get('id_token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
       setJwt(token);
       setIsLoggedIn(true);
-
-      window.location.hash = '';
+      window.history.replaceState({}, '', '/');
     }
   }, [setJwt, setIsLoggedIn]);
 };

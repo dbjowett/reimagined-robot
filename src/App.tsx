@@ -2,14 +2,18 @@ import { Shield, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { useFetchNonce } from './hooks/useFetchNonce';
+import { useGenerateAddress } from './hooks/useGenerateAddress';
 import { useHandleCallback } from './hooks/useHandleCallback';
+import { useSalt } from './hooks/useSalt';
 import { useAuth } from './providers/AuthProvider';
 import type { Provider } from './types';
 import { getProviderUrl } from './utils/getProviderUrl';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(false);
-  const { isLoggedIn, handleLogout } = useAuth();
+  const { isLoggedIn, handleLogout, jwt } = useAuth();
+  const { salt } = useSalt();
+
   const { nonce } = useFetchNonce(); // ** Fetch on mount
   useHandleCallback(); // ** Handle cb from Google
 
@@ -24,6 +28,7 @@ function App() {
     window.location.href = signInUrl;
     setLoading(false);
   };
+  const address = useGenerateAddress(jwt, salt);
 
   const Card = ({ children }: { children: React.ReactNode }) => {
     const Icon = isLoggedIn ? ShieldCheck : Shield;
@@ -39,7 +44,7 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen">
+    <div className="flex flex-col h-screen w-screen bg-base-200">
       <Navbar />
       <div className="flex flex-1 items-center justify-center">
         <div className="card w-96 bg-base-100 shadow-xl p-6">
@@ -51,7 +56,7 @@ function App() {
                 onClick={() => handleSignInWithProvider('google')}
                 disabled={loading || !nonce}
               >
-                {loading || !nonce ? (
+                {!nonce ? (
                   <>
                     <span className="loading loading-spinner loading-xs mr-1" />
                     Loading...
@@ -63,7 +68,7 @@ function App() {
             </Card>
           ) : (
             <Card>
-              <span className="text-truncate max-w-full overflow-hidden">Logged in</span>
+              <span className="text-truncate max-w-full overflow-hidden">Address: {address}</span>
               <button className="btn btn-error w-full mt-4 text-white" onClick={handleLogout}>
                 Logout
               </button>
