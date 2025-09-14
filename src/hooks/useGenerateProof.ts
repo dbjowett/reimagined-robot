@@ -1,31 +1,36 @@
 import type { ZkLoginProof } from '@mysten/sui/client';
+import { getExtendedEphemeralPublicKey } from '@mysten/sui/zklogin';
 import { useEffect, useState } from 'react';
 import { fetchProof } from '../api/fetchProof';
 import { useAuth } from '../providers/AuthProvider';
-import type { ZkLoginSession } from './useZkLoginSession';
+import { getEphemeralKeypair, type ZkLoginSession } from './useZkLoginSession';
 
 export const useGenerateProof = (salt: bigint | null, zkLoginSession: ZkLoginSession | null) => {
   const { isLoggedIn, jwt } = useAuth();
   const [zkProof, setZkProof] = useState<ZkLoginProof | null>(null);
   const [proofLoading, setProofLoading] = useState(false);
 
+  console.log(zkLoginSession);
+  console.log('zkLoginSession?.ephemeralPublicKey', zkLoginSession?.ephemeralPublicKey);
   useEffect(() => {
     const getProof = async () => {
       if (
-        !isLoggedIn ||
         !jwt ||
         !salt ||
         !zkLoginSession ||
-        !zkLoginSession.extEpPublicKey ||
         zkProof ||
-        proofLoading
+        proofLoading ||
+        !zkLoginSession.ephemeralKeyPair
       )
         return;
+      const ephemeralKeyPair = getEphemeralKeypair(zkLoginSession.ephemeralPrivateKey);
+      const extEpPublicKey = getExtendedEphemeralPublicKey(ephemeralKeyPair.getPublicKey());
+
       setProofLoading(true);
       try {
         const proof = await fetchProof(
           jwt,
-          zkLoginSession.extEpPublicKey,
+          extEpPublicKey,
           zkLoginSession.maxEpoch,
           zkLoginSession.randomness.toString(),
           salt.toString(),

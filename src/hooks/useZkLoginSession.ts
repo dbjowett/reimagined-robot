@@ -1,11 +1,7 @@
 import { SuiClient } from '@mysten/sui/client';
 import { decodeSuiPrivateKey } from '@mysten/sui/cryptography';
-import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
-import {
-  generateNonce as generateNonceZkLogin,
-  generateRandomness,
-  getExtendedEphemeralPublicKey,
-} from '@mysten/sui/zklogin';
+import { Ed25519Keypair, Ed25519PublicKey } from '@mysten/sui/keypairs/ed25519';
+import { generateNonce as generateNonceZkLogin, generateRandomness } from '@mysten/sui/zklogin';
 import { useEffect, useState } from 'react';
 
 const FULLNODE_URL = import.meta.env.VITE_SUI_DEVNET_URL;
@@ -15,7 +11,9 @@ type PersistedSession = {
   zkNonce: string;
   randomness: string;
   maxEpoch: number;
-  extEpPublicKey: string;
+  ephemeralPublicKey: Ed25519PublicKey;
+  ephemeralPrivateKey: string;
+  ephemeralKeyPair: Ed25519Keypair;
   epoch: string;
 };
 
@@ -46,13 +44,17 @@ const createZkLoginSession = async (): Promise<ZkLoginSession> => {
     const ephemeralKeyPair = new Ed25519Keypair();
     const randomness = generateRandomness();
     const zkNonce = generateNonceZkLogin(ephemeralKeyPair.getPublicKey(), maxEpoch, randomness);
-    const extEpPublicKey = getExtendedEphemeralPublicKey(ephemeralKeyPair.getPublicKey());
+
+    const ephemeralPrivateKey = ephemeralKeyPair.getSecretKey();
+    const ephemeralPublicKey = ephemeralKeyPair.getPublicKey();
 
     const newPersistedSession: PersistedSession = {
       zkNonce,
       randomness,
       maxEpoch,
-      extEpPublicKey,
+      ephemeralKeyPair,
+      ephemeralPrivateKey,
+      ephemeralPublicKey,
       epoch,
     };
 

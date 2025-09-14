@@ -1,7 +1,9 @@
 import { Clipboard, LogOut } from 'lucide-react';
+import { Balance } from './components/Balance';
 import { Card } from './components/Card';
 import { Login } from './components/Login';
 import { Navbar } from './components/Navbar';
+import { SendTx } from './components/SendTx';
 import { useClipboard } from './hooks/useClipboard';
 import { useGenerateAddress } from './hooks/useGenerateAddress';
 import { useGenerateProof } from './hooks/useGenerateProof';
@@ -18,7 +20,7 @@ function App() {
   const { salt } = useSalt();
   const { zkLoginSession, loading: zkLoginSessionLoading } = useZkLoginSession(); // ** Fetches on mount
   const { address } = useGenerateAddress(jwt, salt);
-  const { zkProof, proofLoading } = useGenerateProof(salt, zkLoginSession);
+  const { zkProof } = useGenerateProof(salt, zkLoginSession);
 
   return (
     <div className="flex flex-col h-screen w-screen bg-base-200">
@@ -32,10 +34,10 @@ function App() {
             />
           ) : (
             <Card>
-              <div className="flex items-center justify-between  w-full">
+              <div className="flex items-baseline-last justify-between  w-full">
                 {/* Address and copy btn */}
                 <span className="truncate text-xs">
-                  <b className="mr-1">Address:</b>
+                  <span className="font-semibold text-gray-400">Wallet Address</span> <br />
                   {address}
                 </span>
                 <div
@@ -43,13 +45,24 @@ function App() {
                   data-tip={copied ? 'Copied to clipboard' : 'Copy to clipboard'}
                 >
                   <button
-                    className="btn btn-ghost btn-xs btn-square"
+                    className="btn btn-ghost btn-xs btn-square mb-1"
                     onClick={() => handleCopy(address)}
                   >
                     <Clipboard className="w-4 h-4" />
                   </button>
                 </div>
               </div>
+
+              <Balance suiClient={zkLoginSession?.suiClient} address={address} />
+
+              {zkLoginSession && address && salt && zkProof && (
+                <SendTx
+                  zkLoginSession={zkLoginSession}
+                  address={address}
+                  salt={salt}
+                  zkProof={zkProof}
+                />
+              )}
 
               {/* Logout */}
               <button
