@@ -10,8 +10,6 @@ export const useGenerateProof = (salt: bigint | null, zkLoginSession: ZkLoginSes
   const [zkProof, setZkProof] = useState<ZkLoginProof | null>(null);
   const [proofLoading, setProofLoading] = useState(false);
 
-  console.log(zkLoginSession);
-  console.log('zkLoginSession?.ephemeralPublicKey', zkLoginSession?.ephemeralPublicKey);
   useEffect(() => {
     const getProof = async () => {
       if (

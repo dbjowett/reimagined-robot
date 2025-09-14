@@ -4,7 +4,6 @@ import { Ed25519Keypair, Ed25519PublicKey } from '@mysten/sui/keypairs/ed25519';
 import { generateNonce as generateNonceZkLogin, generateRandomness } from '@mysten/sui/zklogin';
 import { useEffect, useState } from 'react';
 
-const FULLNODE_URL = import.meta.env.VITE_SUI_DEVNET_URL;
 const LOGIN_SESSION_KEY = 'zkLoginSession';
 
 type PersistedSession = {
@@ -26,9 +25,9 @@ export function getEphemeralKeypair(base64Key: string): Ed25519Keypair {
   return Ed25519Keypair.fromSecretKey(secretKey);
 }
 
-const createZkLoginSession = async (): Promise<ZkLoginSession> => {
+const createZkLoginSession = async (networkUrl: string): Promise<ZkLoginSession> => {
   try {
-    const suiClient = new SuiClient({ url: FULLNODE_URL });
+    const suiClient = new SuiClient({ url: networkUrl });
     const prevSession = sessionStorage.getItem(LOGIN_SESSION_KEY);
 
     if (prevSession) {
@@ -72,7 +71,7 @@ const createZkLoginSession = async (): Promise<ZkLoginSession> => {
   }
 };
 
-export const useZkLoginSession = () => {
+export const useZkLoginSession = ({ networkUrl }: { networkUrl: string }) => {
   const [zkLoginSession, setZkLoginSession] = useState<ZkLoginSession | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -80,7 +79,7 @@ export const useZkLoginSession = () => {
     try {
       setLoading(true);
       const fetchZkLoginSession = async () => {
-        const zkLoginSession = await createZkLoginSession();
+        const zkLoginSession = await createZkLoginSession(networkUrl);
         if (zkLoginSession) {
           setZkLoginSession(zkLoginSession);
         } else {
@@ -92,7 +91,7 @@ export const useZkLoginSession = () => {
     } catch (error) {
       console.error('Failed to fetch zk login session', error);
     }
-  }, [setZkLoginSession]);
+  }, [setZkLoginSession, networkUrl]);
 
   return { zkLoginSession, loading };
 };

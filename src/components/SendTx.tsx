@@ -1,8 +1,9 @@
 import type { ZkLoginProof } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
 import { genAddressSeed, getZkLoginSignature } from '@mysten/sui/zklogin';
-import { Currency, Send, WalletMinimal } from 'lucide-react';
+import { Send, WalletMinimal } from 'lucide-react';
 import { useState } from 'react';
+import { SuiIcon } from '../assets/SuiIcon';
 import { type ZkLoginSession } from '../hooks/useZkLoginSession';
 import { useAuth } from '../providers/AuthProvider';
 
@@ -73,8 +74,7 @@ export const SendTx = ({
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <div className="join w-full">
           <label className="input join-item  w-full">
-            {/* TODO: Add SUI icon */}
-            <Currency className="w-4 h-4" />
+            <SuiIcon className="w-4 h-4" />
             <input min={1} required type="number" placeholder="Amount (SUI)" name="amount" />
           </label>
         </div>

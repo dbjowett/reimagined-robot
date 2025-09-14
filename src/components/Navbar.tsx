@@ -1,22 +1,23 @@
-import { WalletMinimal } from 'lucide-react';
+import { SuiIcon } from '../assets/SuiIcon';
 import { useAuth } from '../providers/AuthProvider';
 import { ThemeSwitcher } from './ThemeSwitcher';
 
-export const Navbar = () => {
+export const Navbar = ({ networkUrl }: { networkUrl: string }) => {
   const { handleLogout, isLoggedIn } = useAuth();
 
   return (
     <div className="navbar bg-base-100 shadow-md px-4">
       <div className="flex-1">
         <h1 className="flex items-center gap-2 text-xl font-bold">
-          <WalletMinimal />
+          <SuiIcon className="w-6 h-6 text-primary" />
           zkLogin Wallet
         </h1>
       </div>
 
-      <div className="flex-none flex gap-2">
+      <div className="flex-none flex gap-2 items-center">
+        <div className="badge badge-soft badge-success text-xs">{networkUrl.split('/').pop()}</div>
         {isLoggedIn && (
-          <button className="btn btn-ghost" onClick={handleLogout}>
+          <button className="btn btn-error text-white" onClick={handleLogout}>
             Logout
           </button>
         )}

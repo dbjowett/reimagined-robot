@@ -1,4 +1,4 @@
-import { Clipboard, LogOut } from 'lucide-react';
+import { Clipboard } from 'lucide-react';
 import { Balance } from './components/Balance';
 import { Card } from './components/Card';
 import { Login } from './components/Login';
@@ -12,19 +12,23 @@ import { useSalt } from './hooks/useSalt';
 import { useZkLoginSession } from './hooks/useZkLoginSession';
 import { useAuth } from './providers/AuthProvider';
 
+const NETWORK_URL = import.meta.env.VITE_SUI_DEVNET_URL;
+
 function App() {
   const { isLoggedIn, handleLogout, jwt } = useAuth();
 
   useHandleCallback();
   const { copied, handleCopy } = useClipboard();
   const { salt } = useSalt();
-  const { zkLoginSession, loading: zkLoginSessionLoading } = useZkLoginSession(); // ** Fetches on mount
+  const { zkLoginSession, loading: zkLoginSessionLoading } = useZkLoginSession({
+    networkUrl: NETWORK_URL,
+  }); // ** Fetches on mount
   const { address } = useGenerateAddress(jwt, salt);
-  const { zkProof } = useGenerateProof(salt, zkLoginSession);
+  const { zkProof, proofLoading } = useGenerateProof(salt, zkLoginSession);
 
   return (
     <div className="flex flex-col h-screen w-screen bg-base-200">
-      <Navbar />
+      <Navbar networkUrl={NETWORK_URL} />
       <div className="flex flex-1 items-center justify-center">
         <div className="card w-96 bg-base-100 shadow-xl p-6">
           {!isLoggedIn ? (
@@ -52,9 +56,9 @@ function App() {
                   </button>
                 </div>
               </div>
-
+              <div className="divider my-0"></div>
               <Balance suiClient={zkLoginSession?.suiClient} address={address} />
-
+              <div className="divider my-0"></div>
               {zkLoginSession && address && salt && zkProof && (
                 <SendTx
                   zkLoginSession={zkLoginSession}
@@ -63,15 +67,29 @@ function App() {
                   zkProof={zkProof}
                 />
               )}
+              {proofLoading && (
+                <div className="flex w-full flex-col gap-4">
+                  <div className="skeleton h-4 w-28"></div>
+                  <div className="skeleton h-4 w-full"></div>
+                  <div className="skeleton h-4 w-full"></div>
+                </div>
+              )}
+
+              <div className="divider my-0"></div>
+              {/* Add funds button with input */}
+              <div className="flex w-full flex-col gap-4">
+                <input type="number" placeholder="Amount" className="input input-bordered w-full" />
+                <button className="btn btn-primary w-full">Add Funds</button>
+              </div>
 
               {/* Logout */}
-              <button
+              {/* <button
                 className="btn btn-error w-full mt-4 text-white align-middle"
                 onClick={handleLogout}
               >
                 <span className="mr-2">Logout</span>
                 <LogOut className="w-4 h-4 mt-0.5" />
-              </button>
+              </button> */}
             </Card>
           )}
         </div>
