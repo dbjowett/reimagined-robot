@@ -3,6 +3,7 @@ import { Transaction } from '@mysten/sui/transactions';
 import { genAddressSeed, getZkLoginSignature } from '@mysten/sui/zklogin';
 import { Send, WalletMinimal } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { SuiIcon } from '../assets/SuiIcon';
 import { type ZkLoginSession } from '../hooks/useZkLoginSession';
 import { useAuth } from '../providers/AuthProvider';
@@ -21,17 +22,38 @@ export const SendTx = ({
   const { decodedJwt } = useAuth();
   const { suiClient } = zkLoginSession;
   const [loading, setLoading] = useState<boolean>(false);
+  const [formInput, setFormInput] = useState<{ amount: string; recipient: string }>({
+    amount: '',
+    recipient: '',
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
     e.preventDefault();
     if (!decodedJwt || !decodedJwt.sub || !decodedJwt.aud) return;
-    const amount = (e.target as HTMLFormElement).amount.value;
-    const recipient = (e.target as HTMLFormElement).recipient.value;
+    const amount = formInput.amount;
+    const recipient = formInput.recipient;
 
     try {
       const txb = new Transaction();
 
       txb.setSender(address);
+
+      // Get balance
+      const coins = await suiClient.getCoins({
+        owner: address,
+        coinType: '0x2::sui::SUI',
+      });
+      const balance = coins.data[0].balance;
+
+      if (Number(balance) < Number(amount)) {
+        throw new Error('Insufficient balance');
+      }
+      const coinId = coins.data[0].coinObjectId;
+
+      const coin = txb.splitCoins(txb.object(coinId), [txb.pure.u64(Number(amount))]);
+
+      txb.transferObjects([coin], txb.pure.address(recipient));
 
       const { bytes, signature: userSignature } = await txb.sign({
         client: suiClient,
@@ -52,12 +74,12 @@ export const SendTx = ({
         userSignature,
       });
 
-      const res = await suiClient.executeTransactionBlock({
+      await suiClient.executeTransactionBlock({
         transactionBlock: bytes,
         signature: zkLoginSignature,
       });
-
-      console.log(res);
+      setFormInput({ amount: '', recipient: '' });
+      toast.success('Transaction sent successfully');
     } catch (error) {
       console.error(error);
     } finally {
@@ -65,30 +87,41 @@ export const SendTx = ({
     }
   };
 
-  // if (!suiClient.getAccountAddress()) {
-  //   return <div>Please connect your wallet</div>;
-  // }
-
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <div className="join w-full">
           <label className="input join-item  w-full">
             <SuiIcon className="w-4 h-4" />
-            <input min={1} required type="number" placeholder="Amount (SUI)" name="amount" />
+            <input
+              min={1}
+              required
+              type="number"
+              placeholder="Amount (SUI)"
+              name="amount"
+              value={formInput.amount}
+              onChange={(e) => setFormInput({ ...formInput, amount: e.target.value })}
+            />
           </label>
         </div>
         <div className="join w-full">
           <label className="input join-item  w-full">
             <WalletMinimal className="w-4 h-4" />
-            <input required type="text" placeholder="Recipient Address" name="recipient" />
+            <input
+              required
+              type="text"
+              placeholder="Recipient Address"
+              name="recipient"
+              value={formInput.recipient}
+              onChange={(e) => setFormInput({ ...formInput, recipient: e.target.value })}
+            />
           </label>
         </div>
         <button className="btn btn-neutral w-full" type="submit">
           {loading ? (
             <>
               <span className="loading loading-spinner loading-xs mr-1" />
-              Loading...
+              Sending...
             </>
           ) : (
             <>

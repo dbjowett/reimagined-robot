@@ -35,6 +35,7 @@ const createZkLoginSession = async (networkUrl: string): Promise<ZkLoginSession>
       return {
         ...persistedSession,
         suiClient,
+        ephemeralKeyPair: getEphemeralKeypair(persistedSession.ephemeralPrivateKey),
       };
     }
 

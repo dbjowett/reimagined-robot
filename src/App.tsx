@@ -1,4 +1,4 @@
-import { Clipboard, LogOut } from 'lucide-react';
+import { Clipboard } from 'lucide-react';
 import { AddFunds } from './components/AddFunds';
 import { Balance } from './components/Balance';
 import { Card } from './components/Card';
@@ -16,7 +16,7 @@ import { useAuth } from './providers/AuthProvider';
 const NETWORK_URL = import.meta.env.VITE_SUI_DEVNET_URL;
 
 function App() {
-  const { isLoggedIn, jwt, handleLogout } = useAuth();
+  const { isLoggedIn, jwt } = useAuth();
 
   useHandleCallback();
   const { copied, handleCopy } = useClipboard();
@@ -60,6 +60,7 @@ function App() {
               <div className="divider my-0"></div>
               <Balance suiClient={zkLoginSession?.suiClient} address={address} />
               <div className="divider my-0"></div>
+              <h3 className="text-lg font-bold">Send Transaction</h3>
               {zkLoginSession && address && salt && zkProof && (
                 <SendTx
                   zkLoginSession={zkLoginSession}
@@ -76,19 +77,16 @@ function App() {
                 </div>
               )}
 
-              <div className="divider my-0"></div>
+              {/* <div className="divider my-0"></div> */}
               {/* Add funds button with input */}
+              <h3 className=" text-lg font-bold mt-2">Add Funds</h3>
               <AddFunds networkUrl={NETWORK_URL} address={address ?? ''} />
 
-              {/* Logout */}
               <div className="divider my-0"></div>
-              <button
-                className="btn btn-error w-full text-white align-middle"
-                onClick={handleLogout}
-              >
-                <span className="mr-2">Logout</span>
-                <LogOut className="w-4 h-4 mt-0.5" />
-              </button>
+              <div className="btn btn-ghost w-full" onClick={() => handleCopy(salt?.toString())}>
+                <Clipboard className="w-4 h-4" />
+                Copy Salt to Clipboard
+              </div>
             </Card>
           )}
         </div>

@@ -24,8 +24,6 @@ export const useSalt = () => {
       setSalt(newSalt);
       localStorage.setItem('salt', newSalt.toString());
     }
-  }, []);
-
-  console.log('Salty', salt);
+  }, [salt]);
   return { salt };
 };

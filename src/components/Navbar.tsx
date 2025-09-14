@@ -14,7 +14,7 @@ export const Navbar = ({ networkUrl }: { networkUrl: string }) => {
         </h1>
       </div>
 
-      <div className="flex-none flex gap-2 items-center">
+      <div className="flex-none flex gap-4 items-center">
         <div className="badge badge-soft badge-success text-xs">{networkUrl.split('/').pop()}</div>
         {isLoggedIn && (
           <button className="btn btn-error text-white" onClick={handleLogout}>
