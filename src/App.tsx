@@ -1,4 +1,5 @@
-import { Clipboard } from 'lucide-react';
+import { Clipboard, LogOut } from 'lucide-react';
+import { AddFunds } from './components/AddFunds';
 import { Balance } from './components/Balance';
 import { Card } from './components/Card';
 import { Login } from './components/Login';
@@ -15,7 +16,7 @@ import { useAuth } from './providers/AuthProvider';
 const NETWORK_URL = import.meta.env.VITE_SUI_DEVNET_URL;
 
 function App() {
-  const { isLoggedIn, handleLogout, jwt } = useAuth();
+  const { isLoggedIn, jwt, handleLogout } = useAuth();
 
   useHandleCallback();
   const { copied, handleCopy } = useClipboard();
@@ -77,19 +78,17 @@ function App() {
 
               <div className="divider my-0"></div>
               {/* Add funds button with input */}
-              <div className="flex w-full flex-col gap-4">
-                <input type="number" placeholder="Amount" className="input input-bordered w-full" />
-                <button className="btn btn-primary w-full">Add Funds</button>
-              </div>
+              <AddFunds networkUrl={NETWORK_URL} address={address ?? ''} />
 
               {/* Logout */}
-              {/* <button
-                className="btn btn-error w-full mt-4 text-white align-middle"
+              <div className="divider my-0"></div>
+              <button
+                className="btn btn-error w-full text-white align-middle"
                 onClick={handleLogout}
               >
                 <span className="mr-2">Logout</span>
                 <LogOut className="w-4 h-4 mt-0.5" />
-              </button> */}
+              </button>
             </Card>
           )}
         </div>
