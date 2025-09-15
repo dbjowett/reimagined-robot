@@ -40,20 +40,20 @@ export const SendTx = ({
       txb.setSender(address);
 
       // Get balance
-      const coins = await suiClient.getCoins({
-        owner: address,
-        coinType: '0x2::sui::SUI',
-      });
-      const balance = coins.data[0].balance;
+      // const coins = await suiClient.getCoins({
+      //   owner: address,
+      //   coinType: '0x2::sui::SUI',
+      // });
+      // const balance = coins.data[0].balance;
 
-      if (Number(balance) < Number(amount)) {
-        throw new Error('Insufficient balance');
-      }
-      const coinId = coins.data[0].coinObjectId;
+      // if (Number(balance) < Number(amount)) {
+      //   throw new Error('Insufficient balance');
+      // }
+      // const coinId = coins.data[0].coinObjectId;
 
-      const coin = txb.splitCoins(txb.object(coinId), [txb.pure.u64(Number(amount))]);
+      // const coin = txb.splitCoins(txb.object(coinId), [txb.pure.u64(Number(amount))]);
 
-      txb.transferObjects([coin], txb.pure.address(recipient));
+      // txb.transferObjects([coin], txb.pure.address(recipient));
 
       const { bytes, signature: userSignature } = await txb.sign({
         client: suiClient,

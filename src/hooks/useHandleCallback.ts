@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useAuth } from '../providers/AuthProvider';
 
 export const useHandleCallback = () => {
-  const { setJwt, setIsLoggedIn } = useAuth();
+  const { setJwtData, setIsLoggedIn } = useAuth();
 
   useEffect(() => {
     if (window.location.pathname === '/callback') {
@@ -13,9 +13,9 @@ export const useHandleCallback = () => {
         console.error('No token found');
         return;
       }
-      setJwt(token);
+      setJwtData(token);
       setIsLoggedIn(true);
       window.history.replaceState({}, '', '/');
     }
-  }, [setJwt, setIsLoggedIn]);
+  }, [setJwtData, setIsLoggedIn]);
 };

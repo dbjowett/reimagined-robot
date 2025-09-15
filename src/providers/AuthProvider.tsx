@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 type AuthContextType = {
   isLoggedIn: boolean;
@@ -9,6 +9,7 @@ type AuthContextType = {
   setJwt: (jwt: string | null) => void;
   handleLogout: () => void;
   decodedJwt: JwtPayload | null;
+  setJwtData: (jwt: string) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,19 +19,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [jwt, setJwt] = useState<string | null>(null);
   const [decodedJwt, setDecodedJwt] = useState<JwtPayload | null>(null);
 
-  useEffect(() => {
-    if (!jwt) return;
-    setDecodedJwt(jwtDecode<JwtPayload>(jwt));
-  }, [jwt]);
-
   const handleLogout = () => {
     setIsLoggedIn(false);
     setJwt(null);
   };
 
+  const setJwtData = (jwt: string) => {
+    setJwt(jwt);
+    setDecodedJwt(jwtDecode<JwtPayload>(jwt));
+  };
+
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, setIsLoggedIn, jwt, setJwt, handleLogout, decodedJwt }}
+      value={{ isLoggedIn, setIsLoggedIn, jwt, setJwt, handleLogout, decodedJwt, setJwtData }}
     >
       {children}
     </AuthContext.Provider>

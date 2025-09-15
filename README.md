@@ -7,7 +7,7 @@ A minimal, clean-designed web wallet using zkLogin auth with Google oAuth, built
 - [x] zkLogin/Google auth flow
 - [x] Login screen & logout functionality (Navbar)
 - [x] Implement wallet page
-- [ ] Implement balance viewing functionality
+- [x] Implement balance viewing functionality
 - [ ] Add transaction approval interface
 - [ ] Deploy to Sui testnet (?)
 - [ ] Create MPC.md

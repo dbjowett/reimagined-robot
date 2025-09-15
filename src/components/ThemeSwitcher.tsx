@@ -40,12 +40,11 @@ const themes = [
 ];
 
 export const ThemeSwitcher = () => {
-  const [theme, setTheme] = useState<string>(
-    document.documentElement.getAttribute('data-theme') || 'light'
-  );
+  const [theme, setTheme] = useState<string>(localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
   return (
