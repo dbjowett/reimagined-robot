@@ -27,7 +27,9 @@ function App() {
   const { isLoggedIn, jwt } = useAuth();
 
   useHandleCallback();
-  const { copied, handleCopy } = useClipboard();
+
+  const { copied: saltCopied, handleCopy: handleCopySalt } = useClipboard();
+  const { copied: addressCopied, handleCopy: handleCopyAddress } = useClipboard();
   const { salt } = useSalt();
   const { zkLoginSession, loading: zkLoginSessionLoading } = useZkLoginSession({
     networkUrl: selectedNetwork,
@@ -66,11 +68,13 @@ function App() {
                 </span>
                 <div
                   className="tooltip"
-                  data-tip={copied ? 'Copied to clipboard' : 'Copy to clipboard'}
+                  data-tip={
+                    addressCopied ? 'Address copied to clipboard' : 'Copy address to clipboard'
+                  }
                 >
                   <button
                     className="btn btn-ghost btn-xs btn-square mb-1"
-                    onClick={() => handleCopy(address)}
+                    onClick={() => handleCopyAddress(address)}
                   >
                     <Clipboard className="w-4 h-4" />
                   </button>
@@ -107,10 +111,10 @@ function App() {
               <div className="divider my-0"></div>
               <div
                 className="btn btn-ghost w-full"
-                onClick={() => handleCopy(salt?.toString() ?? '')}
+                onClick={() => handleCopySalt(salt?.toString() ?? '')}
               >
                 <Clipboard className="w-4 h-4" />
-                Copy Salt to Clipboard
+                {saltCopied ? 'Salt copied to clipboard' : 'Copy Salt to Clipboard'}
               </div>
             </Card>
           )}
