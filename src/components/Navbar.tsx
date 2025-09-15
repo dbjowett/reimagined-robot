@@ -10,7 +10,7 @@ export const Navbar = ({ networkUrl }: { networkUrl: string }) => {
       <div className="flex-1">
         <h1 className="flex items-center gap-2 text-xl font-bold">
           <SuiIcon className="w-6 h-6 text-primary" />
-          zkLogin Wallet
+          T3 Wallet
         </h1>
       </div>
 

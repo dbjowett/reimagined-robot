@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [decodedJwt, setDecodedJwt] = useState<JwtPayload | null>(null);
 
   const handleLogout = () => {
+    sessionStorage.removeItem('zkLoginSession');
     setIsLoggedIn(false);
     setJwt(null);
   };

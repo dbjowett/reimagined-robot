@@ -2,7 +2,15 @@ import { getFaucetHost, requestSuiFromFaucetV2 } from '@mysten/sui/faucet';
 import { WalletMinimal } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-export const AddFunds = ({ networkUrl, address }: { networkUrl: string; address: string }) => {
+export const AddFunds = ({
+  networkUrl,
+  address,
+  fetchBalance,
+}: {
+  networkUrl: string;
+  address: string;
+  fetchBalance: () => void;
+}) => {
   const host = networkUrl.includes('testnet') ? 'testnet' : 'devnet';
   const faucetHost = getFaucetHost(host);
   const handleAddFunds = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -13,17 +21,21 @@ export const AddFunds = ({ networkUrl, address }: { networkUrl: string; address:
         recipient: address,
       });
       toast.success('Funds added successfully');
+      fetchBalance();
     } catch (error) {
       console.error(error);
       toast.error('Failed to add funds');
     }
   };
   return (
-    <form className="flex w-full flex-col gap-4" onSubmit={handleAddFunds}>
-      <button className="btn btn-outline w-full" type="submit">
-        Add Funds
-        <WalletMinimal className="w-4 h-4" />
-      </button>
-    </form>
+    // tooltip to say this will only work on devnet
+    <div className="tooltip w-full" data-tip="Devnet only">
+      <form className="flex w-full flex-col gap-4" onSubmit={handleAddFunds}>
+        <button className="btn btn-outline w-full" type="submit">
+          Add Funds
+          <WalletMinimal className="w-4 h-4" />
+        </button>
+      </form>
+    </div>
   );
 };

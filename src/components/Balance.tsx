@@ -1,23 +1,6 @@
-import type { CoinBalance, SuiClient } from '@mysten/sui/client';
-import { useEffect, useState } from 'react';
+import type { CoinBalance } from '@mysten/sui/client';
 
-export const Balance = ({
-  suiClient,
-  address,
-}: {
-  suiClient: SuiClient | undefined;
-  address: string | null;
-}) => {
-  const [balance, setBalance] = useState<CoinBalance | null>(null);
-  useEffect(() => {
-    const fetchBalance = async () => {
-      if (!suiClient || !address) return 0;
-      const balance = await suiClient.getBalance({ owner: address });
-      setBalance(balance);
-    };
-    fetchBalance();
-  }, [suiClient, address]);
-
+export const Balance = ({ balance }: { balance: CoinBalance | null }) => {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between">

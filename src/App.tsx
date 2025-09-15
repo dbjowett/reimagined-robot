@@ -1,5 +1,6 @@
+import type { CoinBalance } from '@mysten/sui/client';
 import { Clipboard } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AddFunds } from './components/AddFunds';
 import { Balance } from './components/Balance';
 import { Card } from './components/Card';
@@ -16,10 +17,13 @@ import { useAuth } from './providers/AuthProvider';
 const DEV_NETWORK_URL = import.meta.env.VITE_SUI_DEVNET_URL;
 
 function App() {
+  const [balance, setBalance] = useState<CoinBalance | null>(null);
+
   const prevSelectedNetwork = localStorage.getItem('selectedNetwork');
   const [selectedNetwork, setSelectedNetwork] = useState<string>(
     prevSelectedNetwork || DEV_NETWORK_URL
   );
+
   const { isLoggedIn, jwt } = useAuth();
 
   useHandleCallback();
@@ -30,6 +34,16 @@ function App() {
   });
   const { address } = useGenerateAddress(jwt, salt);
   const { zkProof, proofLoading } = useGenerateProof(salt, zkLoginSession);
+
+  const fetchBalance = useCallback(async () => {
+    if (!zkLoginSession?.suiClient || !address) return;
+    const balance = await zkLoginSession.suiClient.getBalance({ owner: address });
+    setBalance(balance);
+  }, [zkLoginSession?.suiClient, address]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance]);
 
   return (
     <div className="flex flex-col h-screen w-screen bg-base-200">
@@ -63,7 +77,7 @@ function App() {
                 </div>
               </div>
               <div className="divider my-0"></div>
-              <Balance suiClient={zkLoginSession?.suiClient} address={address} />
+              <Balance balance={balance} />
               <div className="divider my-0"></div>
               <h3 className="text-lg font-bold">Send Transaction</h3>
               {zkLoginSession && address && salt && zkProof && (
@@ -83,7 +97,11 @@ function App() {
               )}
 
               {selectedNetwork.includes('devnet') && (
-                <AddFunds networkUrl={selectedNetwork} address={address ?? ''} />
+                <AddFunds
+                  networkUrl={selectedNetwork}
+                  address={address ?? ''}
+                  fetchBalance={fetchBalance}
+                />
               )}
 
               <div className="divider my-0"></div>
