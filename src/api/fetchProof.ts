@@ -1,4 +1,11 @@
+import type { getZkLoginSignature } from '@mysten/sui/zklogin';
+
 const PROVER_URL = import.meta.env.VITE_PROVER_URL;
+
+export type PartialZkLoginSignature = Omit<
+  Parameters<typeof getZkLoginSignature>['0']['inputs'],
+  'addressSeed'
+>;
 
 export const fetchProof = async (
   jwt: string,
@@ -24,5 +31,5 @@ export const fetchProof = async (
     throw new Error('Failed to fetch proof');
   }
   const proof = await res.json();
-  return proof;
+  return proof as PartialZkLoginSignature;
 };

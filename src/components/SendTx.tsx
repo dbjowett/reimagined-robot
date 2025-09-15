@@ -1,9 +1,9 @@
-import type { ZkLoginProof } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
 import { genAddressSeed, getZkLoginSignature } from '@mysten/sui/zklogin';
 import { Send, WalletMinimal } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import type { PartialZkLoginSignature } from '../api/fetchProof';
 import { SuiIcon } from '../assets/SuiIcon';
 import { type ZkLoginSession } from '../hooks/useZkLoginSession';
 import { useAuth } from '../providers/AuthProvider';
@@ -17,7 +17,7 @@ export const SendTx = ({
   zkLoginSession: ZkLoginSession;
   address: string;
   salt: bigint;
-  zkProof: ZkLoginProof;
+  zkProof: PartialZkLoginSignature;
 }) => {
   const { decodedJwt } = useAuth();
   const { suiClient } = zkLoginSession;
@@ -51,7 +51,7 @@ export const SendTx = ({
 
       const zkLoginSignature = getZkLoginSignature({
         inputs: {
-          ...zkProof, // partialZkLoginSignature??
+          ...zkProof,
           addressSeed,
         },
         maxEpoch: zkLoginSession.maxEpoch,
