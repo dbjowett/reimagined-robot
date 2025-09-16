@@ -70,7 +70,7 @@ cp .env.sample .env
 VITE_GOOGLE_CLIENT_ID=<CLIENT_ID>
 ```
 
-4.  Start server:
+4. Start server:
 
 ```bash
 pnpm dev
@@ -87,16 +87,22 @@ git clone https://github.com/dbjowett/reimagined-robot.git
 cd t3
 ```
 
-2. Build the Docker container (make sure Docker Daemon is running)
+2. Copy .env.sample to .env
+
+```bash
+cp .env.sample .env
+```
+
+3. Build the Docker container (make sure Docker Daemon is running)
 
 ```
 docker build -t my-sui-wallet .
 ```
 
-3. Run the Docker container
+4. Run the Docker container
 
 ```
 docker run -it -p 5173:5173 my-sui-wallet
 ```
 
-4. Open `http://localhost:5173`
+5. Open `http://localhost:5173`
