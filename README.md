@@ -64,7 +64,7 @@ pnpm install
 cp .env.sample .env
 ```
 
-4. Update Google Client URL inside `/.env` file
+4. Update Google Client URL inside `/.env` file (See create new client id)
 
 ```bash
 VITE_GOOGLE_CLIENT_ID=<CLIENT_ID>
@@ -93,16 +93,35 @@ cd t3
 cp .env.sample .env
 ```
 
-3. Build the Docker container (make sure Docker Daemon is running)
+3. Update Google Client URL inside `/.env` file (See create new client id)
+
+```bash
+VITE_GOOGLE_CLIENT_ID=<CLIENT_ID>
+```
+
+4. Build the Docker container (make sure Docker Daemon is running)
 
 ```
 docker build -t my-sui-wallet .
 ```
 
-4. Run the Docker container
+5. Run the Docker container
 
 ```
 docker run -it -p 5173:5173 my-sui-wallet
 ```
 
-5. Open `http://localhost:5173`
+6. Open `http://localhost:5173`
+
+### Create New Client ID
+
+1. Navigate to Google Cloud Console
+2. Create New Project and set it to active
+3. Navigate to `APIs and services` -> `Credentials`
+4. Click `Create credentials` -> `OAuth Client Id` -> `Configure consent screen` (follow flow)
+5. On Create OAuth Client ID screen:
+
+- Application Type: Web application
+- Authorized Javascript origins: `http://localhost:5173`
+- Authorized redirect URLs: `http://localhost:5173`
+- Save & copy client id.
