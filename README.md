@@ -123,5 +123,5 @@ docker run -it -p 5173:5173 my-sui-wallet
 
 - Application Type: Web application
 - Authorized Javascript origins: `http://localhost:5173`
-- Authorized redirect URLs: `http://localhost:5173`
+- Authorized redirect URLs: `http://localhost:5173/callback`
 - Save & copy client id.
